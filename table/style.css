@@ -8,3 +8,9 @@ td {
   padding: 10px 20px;
   border: 1px solid #000;
 }
+
+.th:hover {
+  color: blueviolet;
+  transform: scale(1.1);
+  transition: all ease-in-out 0.2s;
+}

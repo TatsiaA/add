@@ -68,15 +68,49 @@ document.addEventListener('DOMContentLoaded', (event) => {
   table.append(thead, tbody);
 
   let tableRow1 = createEl('tr', 'tr', thead, '');
-  createEl('th', 'th', tableRow1, 'N');
-  createEl('th', 'th', tableRow1, 'Страна');
-  createEl('th', 'th', tableRow1, 'Столица');
-  createEl('th', 'th', tableRow1, 'Численность населения, чел.');
-  createEl('th', 'th', tableRow1, 'Площадь территории, км2');
-  createEl('th', 'th', tableRow1, 'Официальный язык');
+  let tableFields = [
+    'N',
+    'Страна',
+    'Столица',
+    'Численность населения, чел.',
+    'Площадь территории, км2',
+    'Официальный язык'
+  ]
+
+  tableFields.forEach(el => {
+    createEl('th', 'th', tableRow1, el);
+  });
+
 
   let cols = document.querySelectorAll('.th');
   create_tableContent(countries.length, cols.length, tbody);
+
+  let arrKeys = Object.keys(countries[0]);
+  document.querySelector('.tr').addEventListener('click', function sortByField(el) {
+      let field = arrKeys[tableFields.indexOf(el.target.textContent)];
+
+      countries.sort(function(a, b) {
+        return typeof field === 'number' ?
+        parseFloat(a[field]) - parseFloat(b[field]) :
+        a[field] > b[field] ? 1 : -1;
+    });
+
+
+
+
+ // Sort by price high to low
+//  countries.sort(sort_by('square', true, parseInt));
+
+ // Sort by city, case-insensitive, A-Z
+//  countries.sort(sort_by('name', false, function(a){return a.toUpperCase()}));
+
+
+
+      tbody.innerHTML = '';
+      create_tableContent(countries.length, cols.length, tbody);
+    });
+
+
 
   function create_tableContent(tableRows, tableCols, tBody) {
 
