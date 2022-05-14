@@ -1,12 +1,13 @@
 class Entity {
+
   constructor(name) {
     this.name = name;
     }
-
 }
 
 
 class User extends Entity {
+  
   constructor(name) {
     super(name);
     }
