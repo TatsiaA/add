@@ -1,9 +1,9 @@
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
 
   const countries = [
     {
       n: 1,
-      name: "Германия",
+      country: "Германия",
       capital: "Берлин",
       population: 83149300,
       square: 357409,
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     },
     {
       n: 2,
-      name: "Греция",
+      country: "Греция",
       capital: "Афины",
       population: 10800000,
       square: 131957,
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     },
     {
       n: 3,
-      name: "Бельгия",
+      country: "Бельгия",
       capital: "Брюссель",
       population: 11414214,
       square: 30528,
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     },
     {
       n: 4,
-      name: "Польша",
+      country: "Польша",
       capital: "Варшава",
       population: 37881262,
       square: 312679,
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     },
     {
       n: 5,
-      name: "Албания",
+      country: "Албания",
       capital: "Тирана",
       population: 2829741,
       square: 28748,
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     },
     {
       n: 6,
-      name: "Швейцария",
+      country: "Швейцария",
       capital: "- (де-юре), Берн (де-факто)",
       population: 8500000,
       square: 41285,
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     },
     {
       n: 7,
-      name: "Австрия",
+      country: "Австрия",
       capital: "Вена",
       population: 8920000,
       square: 83879,
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   table.append(thead, tbody);
 
-  let tableRow1 = createEl('tr', 'tr', thead, '');
+  let tableHeadRow = createEl('tr', 'tr', thead, '');
   let tableFields = [
     'N',
     'Страна',
@@ -78,48 +78,71 @@ document.addEventListener('DOMContentLoaded', (event) => {
   ]
 
   tableFields.forEach(el => {
-    createEl('th', 'th', tableRow1, el);
+    createEl('th', 'th', tableHeadRow, el);
   });
 
-
   let cols = document.querySelectorAll('.th');
-  create_tableContent(countries.length, cols.length, tbody);
+  createTableContent(countries.length, cols.length, tbody);
+  sortColumn();
+  editCell();
 
-  let arrKeys = Object.keys(countries[0]);
-  document.querySelector('.tr').addEventListener('click', function sortByField(el) {
+  function sortColumn() {
+    // получаем массив с названиями полей для сортировки
+    let arrKeys = Object.keys(countries[0]);
+    // вешаем слушателя на событие клика по полю заголовка таблицы
+    document.querySelector('.tr').addEventListener('click', function sortByField(el) {
       let field = arrKeys[tableFields.indexOf(el.target.textContent)];
 
       countries.sort(function(a, b) {
         return typeof field === 'number' ?
         parseFloat(a[field]) - parseFloat(b[field]) :
         a[field] > b[field] ? 1 : -1;
-    });
+      });
 
-
-
-
- // Sort by price high to low
-//  countries.sort(sort_by('square', true, parseInt));
-
- // Sort by city, case-insensitive, A-Z
-//  countries.sort(sort_by('name', false, function(a){return a.toUpperCase()}));
-
-
-
+      // заменяем содержимое таблицы
       tbody.innerHTML = '';
-      create_tableContent(countries.length, cols.length, tbody);
+      createTableContent(countries.length, cols.length, tbody);
+      // добавляем возможность редактирования
+      editCell();
     });
+  }
 
+  function editCell() {
+    let tds = document.querySelectorAll('td');
+    tds.forEach(td => {
+      td.addEventListener('click', function editField(el) {
+        td.contentEditable = "true";
+        // получаем № страны из первой колонки таблицы
+        let theRowN = +el.target.parentElement.firstChild.textContent;
+        // получаем название изменяемого поля/ячейки
+        let field = el.target.className;
 
+        let count = 0;
+        countries.forEach((theCountry) => {
+          console.log(theCountry.n === theRowN);
+          if(theCountry.n === theRowN) {
+            countries[count][field] = (typeof theCountry[field] === 'number') ?
+            +el.target.textContent :
+            el.target.textContent;
+          }
+          count++;
+        });
+        td.onblur = function() {
+          this.click();
+          this.contentEditable = 'false';
+        }
+      })
+    });
+  };
 
-  function create_tableContent(tableRows, tableCols, tBody) {
-
+  function createTableContent(tableRows, tableCols, tBody) {
     for (let i = 0; i < tableRows; i++) {
       let tableRow = tBody.insertRow(-1);
 
       for(let el in countries[i]) {
         let tableCell = tableRow.insertCell(-1);
         tableCell.innerHTML = countries[i][el];
+        tableCell.className = el;
       };
     }
   }
