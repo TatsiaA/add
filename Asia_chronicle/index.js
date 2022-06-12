@@ -106,3 +106,72 @@ window.onclick = function(event) {
     }
   }
 }
+
+// “Restore” user name and predefined theme (dark or light) after browser was closed
+
+const login_btn = document.querySelector('.login__btn');
+const login_form = document.querySelector('.login__form');
+
+const input = document.querySelector('input');
+const log = document.getElementById('log');
+
+if (localStorage.getItem('user')) {
+  login_btn.textContent = 'Log out';
+  log.textContent = localStorage.getItem('user');
+} else {
+  login_btn.textContent = 'Log in';
+}
+
+login_btn.addEventListener('click', () => {
+  if (!localStorage.getItem('user')) {
+    login_form.style.display = 'block';
+  } else  {
+    removeUsername();
+    input.value = '';
+  }
+})
+
+input.addEventListener('change', setupUsername);
+
+function removeUsername() {
+  log.textContent = '';
+  localStorage.removeItem('user');
+  login_btn.textContent = 'Log in';
+}
+
+function setupUsername(e) {
+  updateValue(e);
+  hideForm();
+  login_btn.textContent = 'Log out';
+}
+
+function updateValue(e) {
+  log.textContent = e.target.value;
+  localStorage.setItem('user', e.target.value);
+}
+
+function hideForm() {
+  login_form.style.display = 'none';
+}
+
+function changeTheme() {
+  const themeBtn = document.querySelector('.theme');
+
+  if (localStorage.getItem('NightTheme')) {
+    document.body.classList.add('theme-dark');
+  } else {
+    document.body.classList.add('theme-light');
+  }
+
+  themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('theme-dark');
+    document.body.classList.toggle('theme-light');
+    if (document.body.classList.contains('theme-dark')) {
+      localStorage.setItem('NightTheme', 'on');
+    } else {
+      localStorage.removeItem('NightTheme');
+    }
+  });
+}
+
+changeTheme();
