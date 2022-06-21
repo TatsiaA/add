@@ -73,3 +73,7 @@
 .request-info {
   font-weight: bold;
 }
+
+.api-name {
+  text-decoration: none;
+}
