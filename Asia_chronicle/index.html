@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Asia chronicle</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asia chronicle</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="body">
-  <h1 class="body__title">Asia chronicle</h1>
-  <div class="body__dropdown">
-    <button onclick="show(categories)" class="dropbtn">Category</button>
+<h1 class="body__title">Asia chronicle</h1>
+<div class="body__dropdown">
+    <button onclick="show(categories)" class="dropbtn" title="Choose a category to see its APIs">Category</button>
     <div id="categories" class="dropdown-content">
 
     </div>
-  </div>
-  <div class="body__dropdown">
-    <button onclick="show(entries)" class="dropbtn">Title</button>
+</div>
+<div class="body__dropdown">
+    <button onclick="show(entries)" class="dropbtn" title="Choose an API by title">Title</button>
     <div id="entries" class="dropdown-content">
 
     </div>
-  </div>
-
-  <p>Go to one of the APIs by clicking a Title unit. Or choose a category to see all its APIs. And wait a little...</p>
-  <script src="index.js"></script>
+</div>
+<p>APIs grouped by categories or by titles in alphabetical order.</p>
+<script src="index.js"></script>
 </body>
 </html>
