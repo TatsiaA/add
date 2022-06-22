@@ -62,13 +62,12 @@ function workWithTitles(arr) {
     }
 }
 
-function showCategoryInfo() {
+async function showCategoryInfo() {
     // remove previous responses info
     if (document.querySelector('.request-title')) {
         document.querySelector('.request-title').remove();
         Array.prototype.forEach.call(document.querySelectorAll('.api-title-name'), el => el.remove());
     }
-
     if (document.querySelector('.request-info')) {
         document.querySelector('.request-info').textContent = this.textContent;
         Array.prototype.forEach.call(document.querySelectorAll('.api-name'), el => el.remove());
@@ -82,24 +81,23 @@ function showCategoryInfo() {
 
     // create and render new response info items
     let chosenCategory = this.textContent;
-    dataEntries.forEach(element => {
-        if (element.Category === chosenCategory) {
-            let chosen = document.createElement('p');
-            chosen.className = 'api-name';
-            chosen.textContent = ` (${element.Description})`;
-            chosen.insertAdjacentHTML("afterbegin", `<a href=${element.Link}>${element.API}</a>`);
-            document.querySelector('script').insertAdjacentElement('beforebegin', chosen);
-        }
+
+    let titleArr = await getDataTitleItem('category', chosenCategory);
+    titleArr.forEach(element => {
+        let chosen = document.createElement('p');
+        chosen.className = 'api-name';
+        chosen.textContent = ` (${element.Description})`;
+        chosen.insertAdjacentHTML("afterbegin", `<a href=${element.Link}>${element.API}</a>`);
+        document.querySelector('script').insertAdjacentElement('beforebegin', chosen);
     })
 }
 
-function showApiInfo() {
+async function showApiInfo() {
     // remove previous responses info
     if (document.querySelector('.request-info')) {
         document.querySelector('.request-info').remove();
         Array.prototype.forEach.call(document.querySelectorAll('.api-name'), el => el.remove());
     }
-
     if (document.querySelector('.request-title')) {
         document.querySelector('.request-title').textContent = this.textContent;
         Array.prototype.forEach.call(document.querySelectorAll('.api-title-name'), el => el.remove());
@@ -122,6 +120,15 @@ function showApiInfo() {
             document.querySelector('script').insertAdjacentElement('beforebegin', chosenTitle);
         }
     })
+}
+
+async function getDataTitleItem(item, chosenValue) {
+    let response = await fetch(`${baseLink}${entries}?${item}=${chosenValue}`);
+    if (response.status !== 200) {
+        return Promise.reject(new Error(response.statusText))
+    }
+    let commits = await response.json();
+    return [...commits[entries]];
 }
 
 // show the dropdown menu by click the button
